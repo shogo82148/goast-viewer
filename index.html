@@ -1,5 +1,6 @@
 <html ng-app="goast">
   <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,  initial-scale=1">
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
     <link rel="stylesheet" href="http://purecss.io/combo/1.16.1?/css/main-grid.css&/css/main.css&/css/home.css&/css/rainbow/baby-blue.css">
@@ -9,7 +10,31 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
     <script src="angular-ui-tree.min.js"></script>
+    <script src="wasm_exec.js"></script>
     <script src="goast.js"></script>
+    <script>
+      if (!WebAssembly.instantiateStreaming) { // polyfill
+        WebAssembly.instantiateStreaming = async (resp, importObject) => {
+          const source = await (await resp).arrayBuffer();
+          return await WebAssembly.instantiate(source, importObject);
+        };
+      }
+  
+      const go = new Go();
+      let mod, inst;
+      WebAssembly.instantiateStreaming(fetch("goast.wasm"), go.importObject).then((result) => {
+        mod = result.module;
+        inst = result.instance;
+        run();
+      }, (err) => {
+        console.log(err);
+      });
+  
+      async function run() {
+        await go.run(inst);
+        inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
+      }
+    </script>
 
   </head>
   <body>
@@ -35,7 +60,7 @@
 
               <div class="pure-control-group">
                   <input type="file" id="sourcefile" name="sourcefile" placeholder="souce file" ng-model="sourcefile" file-change>
-                  <button type="submit" class="pure-button pure-button-primary" ng-click="parse()">Parse</button>
+                  <button id="btn-parse" type="submit" class="pure-button pure-button-primary" ng-click="parse()" disabled>Parse</button>
               </div>
               <div class="pure-control-group">
                   <textarea class="area" id="code" name="code"  ng-model="source"></textarea>
