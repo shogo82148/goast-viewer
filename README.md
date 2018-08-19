@@ -1,34 +1,35 @@
-GoAst Viewer
+GoAst Viewer WebAssembly Version
 ================================================================
 
-Golang AST visualizer.
+Golang AST visualizer using WebAssembly.
 
 ## Demo
 
-[GoAst Viewer Demo](http://goast.yuroyoro.net/)
+[GoAst Viewer Demo](https://shogo82148.github.io/goast-viewer/)
 
 ![](https://raw.githubusercontent.com/yuroyoro/goast-viewer/master/goast-viewer.png)
 
 
 ## Usage
 
-You just run `goas-viewer` and go `http://localhost:7650/`
+You just run `mattn/serve` and go `http://localhost:5000/`
 
 ```bash
-$ goast-viewer
-2014/06/30 18:57:10 Server listening on : :7650
+$ go get github.com/mattn/serve
+$ serve
 ```
 
 ## Installation
 
-To install, use `go get` and `make install`.
+To install, use `go get` and `make build`.
 
 ```bash
-$ go get -d github.com/yuroyoro/goast-viewer
-$ cd $GOPATH/src/github.com/yuroyoro/goast-viewer
-$ make install
+$ go get -d github.com/shogo82148/goast-viewer
+$ cd $GOPATH/src/github.com/shogo82148/goast-viewer
+$ make build
 ```
 
 ## Author
 
-[yuroyoro](https://github.com/yuroyoro)
+- [shogo82148](https://github.com/shogo82148)
+- [yuroyoro](https://github.com/yuroyoro)
