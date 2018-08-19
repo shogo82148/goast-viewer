@@ -60,7 +60,7 @@ goastapp.factory('uploadService', ['$rootScope', '$http',  function ($rootScope,
 
 // Controller
 // ----------
-goastapp.controller('GoastController', ['$scope', '$rootScope', 'uploadService', '$http', function ($scope, $rootScope, uploadService, $http) {
+goastapp.controller('GoastController', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
     // 'file' is a JavaScript 'File' objects.
     $scope.sourcefile = null;
@@ -82,12 +82,17 @@ func main() {\n\
     $scope.$watch('sourcefile', function (newValue, oldValue) {
         // Only act when our property has changed.
         if (newValue != oldValue) {
-            // Hand file off to uploadService.
-            uploadService.send($scope.sourcefile,function(data, status, headers, config) {
-              $scope.asts   = [data.ast];
-              $scope.source = data.source;
-              $scope.dump   = data.dump;
+            const reader = new FileReader();
+            reader.addEventListener("loadend", function() {
+                GoASTParse(reader.result, function(result) {
+                    data = JSON.parse(result);
+                    $scope.asts   = [data.ast];
+                    $scope.source = data.source;
+                    $scope.dump   = data.dump;
+                    $scope.$apply();
+                });    
             });
+            reader.readAsText($scope.sourcefile);
         }
     }, true);
 
@@ -105,23 +110,13 @@ func main() {\n\
     }
 
     $scope.parse = function() {
-      var data = new FormData(),
-          xhr = new XMLHttpRequest();
-
-      // Send to server
-      data.append('source', $scope.source)
-      // xhr.open('POST', '/parse.json');
-      // xhr.send(data);
-      $http.post('parse.json',data,
-      {
-          headers:{"Content-type":undefined}
-          ,transformRequest: null
-      }).success(function(data, status, headers, config) {
-        $scope.asts   = [data.ast];
-        $scope.source = data.source;
-        $scope.dump   = data.dump;
-      });
-
+        GoASTParse($scope.source, function(result) {
+            data = JSON.parse(result);
+            $scope.asts   = [data.ast];
+            $scope.source = data.source;
+            $scope.dump   = data.dump;
+            $scope.$apply();
+        });
     }
 
     $scope.toggle = function(scope) {

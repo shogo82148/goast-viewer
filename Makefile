@@ -1,9 +1,7 @@
 DEBUG_FLAG = $(if $(DEBUG),-debug)
 
-deps:
-	go get github.com/jteeuwen/go-bindata/...
-	go get -d -t ./...
+GO=go1.11rc1
 
-install: deps
-	go-bindata $(DEBUG_FLAG) -o assets.go assets
-	go install
+goast.wasm: *.go
+	$(GO) get -d -t ./...
+	GOOS=js GOARCH=wasm $(GO) build -o goast.wasm *.go
