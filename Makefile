@@ -1,6 +1,6 @@
 DEBUG_FLAG = $(if $(DEBUG),-debug)
 
-GO=go1.11rc1
+GO=go
 
 goast.wasm: *.go
 	$(GO) get -d -t ./...
