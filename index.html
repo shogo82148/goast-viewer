@@ -20,18 +20,17 @@
           return await WebAssembly.instantiate(source, importObject);
         };
       }
-  
       const go = new Go();
       let mod, inst;
       WebAssembly.instantiateStreaming(fetch("goast.wasm"), go.importObject).then((result) => {
         mod = result.module;
         inst = result.instance;
         run();
-      }, (err) => {
-        console.log(err);
+      }).catch((err) => {
+        console.error(err);
       });
-  
       async function run() {
+        console.clear();
         await go.run(inst);
         inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
       }
