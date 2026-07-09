@@ -1,3 +1,3 @@
 module github.com/shogo82148/goast-viewer
 
-go 1.12
+go 1.27rc2
