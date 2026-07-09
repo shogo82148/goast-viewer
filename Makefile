@@ -5,3 +5,7 @@ GO=go
 goast.wasm: *.go
 	$(GO) get -d -t ./...
 	GOOS=js GOARCH=wasm $(GO) build -o goast.wasm *.go
+
+.PHONY: clean
+clean:
+	rm -f goast.wasm
