@@ -38,7 +38,7 @@ func Parse(filename string, source string) (a *Ast, dump string, err error) {
 	if err != nil {
 		return nil, "", err
 	}
-	return a, string(bf.Bytes()), nil
+	return a, bf.String(), nil
 }
 
 func BuildAst(prefix string, n any) (astobj *Ast, err error) {
@@ -172,5 +172,5 @@ func Label(prefix string, n any) string {
 	default:
 		fmt.Fprintf(&bf, " : %s", n)
 	}
-	return string(bf.Bytes())
+	return bf.String()
 }
