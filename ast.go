@@ -41,7 +41,7 @@ func Parse(filename string, source string) (a *Ast, dump string, err error) {
 	return a, string(bf.Bytes()), nil
 }
 
-func BuildAst(prefix string, n interface{}) (astobj *Ast, err error) {
+func BuildAst(prefix string, n any) (astobj *Ast, err error) {
 	v := reflect.ValueOf(n)
 	t := v.Type()
 
@@ -52,7 +52,7 @@ func BuildAst(prefix string, n interface{}) (astobj *Ast, err error) {
 		a.End = int(node.End())
 	}
 
-	if v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Pointer {
 		v = v.Elem()
 		t = v.Type()
 	}
@@ -89,7 +89,7 @@ func BuildAst(prefix string, n interface{}) (astobj *Ast, err error) {
 			fo := f
 			name := t.Field(i).Name
 
-			if f.Kind() == reflect.Ptr {
+			if f.Kind() == reflect.Pointer {
 				f = f.Elem()
 			}
 
@@ -128,7 +128,7 @@ func BuildAst(prefix string, n interface{}) (astobj *Ast, err error) {
 	return &a, nil
 }
 
-func Label(prefix string, n interface{}) string {
+func Label(prefix string, n any) string {
 
 	var bf bytes.Buffer
 
@@ -140,7 +140,7 @@ func Label(prefix string, n interface{}) string {
 	v := reflect.ValueOf(n)
 	t := v.Type()
 
-	if v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Pointer {
 		v = v.Elem()
 		t = v.Type()
 	}
